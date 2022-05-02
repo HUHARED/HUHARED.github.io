@@ -1,2 +1,3 @@
 # HUHARED.github.io
-个人博客，内容待更新中……
+
+个人GitHub博客主页，内容待更新中。
