@@ -50,50 +50,51 @@ Creator软件内是没有排序功能的，以及联系过来也支持人员，�
    a. 每一行的文本就是一个命令所应对的字典![img](image/README/1651493573916.png)
    b. 以其中的「注释」命令来举例，将其格式化一下，方便观察结构：
 
-      ```python
-      {
-          "_groupName" : "Base",
-          "_id" : "XlVzSWrPx3Ty5Atg",
-          "args" : 
-          [
-              {
-                  "dataType" : "variable",
-                  "defaultValue" : "Rem",
-                  "desc" : "注释内容。",
-                  "inputType" : "textArea",
-                  "name" : "Rem",
-                  "propName" : "注释内容"
-              },
-              {
-                  "dataType" : "variable",
-                  "defaultValue" : "",
-                  "desc" : "需要显示的注释内容",
-                  "inputType" : "textArea",
-                  "name" : "sText",
-                  "propName" : "注释内容"
-              }
-          ],
-          "commandDesc" : "用于给其他命令做注释说明，运行时没有任何效果。",
-          "commandName" : "注释",
-          "formatCode" : "Rem ",
-          "propsGroup" : 
-          [
-              {
-                  "name" : "必选参数",
-                  "value" : 
-                  [
-                      "#sText"
-                  ]
-              }
-          ],
-          "srcCode" : "#Rem #sText",
-          "time" : 1627894027311,
-          "translateType" : 39,
-          "visible" : true
-      }
-      ```
+   ```python
+   {
+       "_groupName" : "Base",
+       "_id" : "XlVzSWrPx3Ty5Atg",
+       "args" : 
+       [
+           {
+               "dataType" : "variable",
+               "defaultValue" : "Rem",
+               "desc" : "注释内容。",
+               "inputType" : "textArea",
+               "name" : "Rem",
+               "propName" : "注释内容"
+           },
+           {
+               "dataType" : "variable",
+               "defaultValue" : "",
+               "desc" : "需要显示的注释内容",
+               "inputType" : "textArea",
+               "name" : "sText",
+               "propName" : "注释内容"
+           }
+       ],
+       "commandDesc" : "用于给其他命令做注释说明，运行时没有任何效果。",
+       "commandName" : "注释",
+       "formatCode" : "Rem ",
+       "propsGroup" : 
+       [
+           {
+               "name" : "必选参数",
+               "value" : 
+               [
+                   "#sText"
+               ]
+           }
+       ],
+       "srcCode" : "#Rem #sText",
+       "time" : 1627894027311,
+       "translateType" : 39,
+       "visible" : true
+   }
+   ```
+
    c. 其中"time"字段就表示当时收藏该命令的毫秒时间戳，使用UiBot内置的「Unix时间戳转换为时间」，「格式化时间」命令，可以看到这个整数所对应的就是2021-08-02 16:47:07，我当初收藏它的时间![img](image/README/1651493630711.png)
-4. 那么我们只需要（先做好文件备份），在文本编辑器内，将希望排名靠前的命令字典的"time"字段整数改小，保存，关闭重开Creator，就可以了。（修改过程中如果觉得字典太长，挤在一行不方便，可以先复制字典文本到其他文本编辑器进行格式化，修改完成之后，再改为一整行的形式粘贴回去。）
+4. 那么我们只需要（先做好文件备份）在文本编辑器内，将希望排名靠前的命令字典的"time"字段整数改小，保存，关闭重开Creator，就可以了。（修改过程中如果觉得字典太长，挤在一行不方便，可以先复制字典文本到其他文本编辑器进行格式化，修改完成之后，再改为一整行的形式粘贴回去。）
 
 举例，我将我特别常用的三个命令的"time"字段分别调整为了整数 `2，3，1`，修改前后截图如下：
 
@@ -125,13 +126,51 @@ Creator软件内是没有排序功能的，以及联系过来也支持人员，�
 
 Worker同理，通过这种方式，可以实现同一台同时运行多个程序（前提是程序之前的界面操作不会互相影响），提高电脑资源利用率。
 
+
 # 3. 代码正确时，UiBot仍然报错的情况与解决方案
 
 待更新。
 
 # 4. 来也UiBot认证相关思维导图
 
-待更新。
+截至本部分内容编写，就我所知，来也目前的产品包括：
+
+* RPA
+  * UiBot Creator，流程代码编辑器
+  * UiBot Worker，流程运行工具
+  * UiBot Commander，流程管理网站
+  * UiBot Mage，AI功能平台
+* 对话机器人吾来（Chatbot）
+
+对于上述产品，有三个来也进行考核与颁发的认证考试
+
+* RPA认证
+  * RPA实施工程师认证
+    * 以UiBot Creator的使用为主，同时涉及到UiBot Worker、UiBot Commander、UiBot Mage
+    * 有初中高，三个级别
+    * 认证界面（可能需要登录UiBot帐号才能访问）：https://academy.laiye.com/certificate
+  * UiBot业务应用认证（我没考过这两个证书，不细说）
+    * RPA审计机器人认证
+    * RPA财务机器人认证
+  * 智能自动化平合售前工程师认证 （初级）（我没考过这两个证书，不细说）
+* IDP认证
+  * 以UiBot Mage的使用为主，同时涉及到UiBot Creator
+  * 有初中，两个级别
+  * 认证界面（可能需要登录UiBot帐号才能访问）：https://academy.laiye.com/idp/certificate
+* Chatbot认证（我没考过这个证书，不细说）
+  * 有初中，两个级别
+  * 认证界面（可能需要登录UiBot帐号才能访问）：https://academy.laiye.com/chatbot/certificate
+
+我在个人的学习过程中，整理了两个思维导图，有的地方写得不够详细，但应该对尚未获得UiBotRPA实施高级认证、IDP中级认证的读者有一定帮助：
+
+* RPA实施工程师高级认证的考点
+  * [源文件（使用MindMaster可编辑）](./UiBot%20RPA高级认证考点/UiBot%20RPA高级认证考点.emmx)
+  * [思维导图PDF文件](./UiBot%20RPA高级认证考点/UiBot%20RPA高级认证考点.pdf)
+* 个人阅读IDP官方手册，并实操之后整理的UiBot Mage操作说明
+  * [源文件（使用MindMaster可编辑）](./UiBot%20Mage说明整理/UiBot%20Mage说明整理.emmx)
+  * [思维导图PDF文件](./UiBot%20Mage说明整理/UiBot%20Mage说明整理.pdf)
+  * [大纲HTML文件](./UiBot%20Mage说明整理/UiBot%20Mage说明整理-大纲.html)
+
 
 # 5. 部分常见场景的处理思路
 
