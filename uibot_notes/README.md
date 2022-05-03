@@ -126,7 +126,6 @@ Creator软件内是没有排序功能的，以及联系过来也支持人员，�
 
 Worker同理，通过这种方式，可以实现同一台同时运行多个程序（前提是程序之前的界面操作不会互相影响），提高电脑资源利用率。
 
-
 # 3. 代码正确时，UiBot仍然报错的情况与解决方案
 
 待更新。
@@ -148,7 +147,7 @@ Worker同理，通过这种方式，可以实现同一台同时运行多个程�
   * RPA实施工程师认证
     * 以UiBot Creator的使用为主，同时涉及到UiBot Worker、UiBot Commander、UiBot Mage
     * 有初中高，三个级别
-    * 认证界面（可能需要登录UiBot帐号才能访问）：https://academy.laiye.com/certificate
+    * [认证界面](https://academy.laiye.com/certificate)
   * UiBot业务应用认证（我没考过这两个证书，不细说）
     * RPA审计机器人认证
     * RPA财务机器人认证
@@ -156,10 +155,10 @@ Worker同理，通过这种方式，可以实现同一台同时运行多个程�
 * IDP认证
   * 以UiBot Mage的使用为主，同时涉及到UiBot Creator
   * 有初中，两个级别
-  * 认证界面（可能需要登录UiBot帐号才能访问）：https://academy.laiye.com/idp/certificate
+  * [认证界面](https://academy.laiye.com/idp/certificate)
 * Chatbot认证（我没考过这个证书，不细说）
   * 有初中，两个级别
-  * 认证界面（可能需要登录UiBot帐号才能访问）：https://academy.laiye.com/chatbot/certificate
+  * [认证界面](https://academy.laiye.com/chatbot/certificate)
 
 我在个人的学习过程中，整理了两个思维导图，有的地方写得不够详细，但应该对尚未获得UiBotRPA实施高级认证、IDP中级认证的读者有一定帮助：
 
@@ -170,7 +169,6 @@ Worker同理，通过这种方式，可以实现同一台同时运行多个程�
   * [源文件（使用MindMaster可编辑）](./UiBot%20Mage说明整理/UiBot%20Mage说明整理.emmx)
   * [思维导图PDF文件](./UiBot%20Mage说明整理/UiBot%20Mage说明整理.pdf)
   * [大纲HTML文件](./UiBot%20Mage说明整理/UiBot%20Mage说明整理-大纲.html)
-
 
 # 5. 部分常见场景的处理思路
 
