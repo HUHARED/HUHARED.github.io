@@ -252,7 +252,7 @@ Worker同理，通过这种方式，可以实现同一台同时运行多个程�
 
 官方的使用指南可以在新建项目时看到，我就不放上来了。
 
-![img](https://file+.vscode-resource.vscode-webview.net/d%3A/OneDrive/Workspace/GitHub/uibot_notes/image/README/1652496725886.png)
+![img](image/README/1652501908879.png)
 
 想要分享的是我自己对官方使用指南的梳理思维导图，内容中结合我个人的理解，解释了一个企业级流程涉及到哪些部分（变量、流程块、功能）、分别作用是什么。
 
