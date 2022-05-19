@@ -7,12 +7,14 @@
     - [2.2.1. Creator](#221-creator)
     - [2.2.2. Worker](#222-worker)
 - [3. UiBot软件本身错误情况与解决方案](#3-uibot软件本身错误情况与解决方案)
-  - [3.1. 单元测试中循环命令报错：尝试去索引一个null值 (全局 &#39;__LOCAL_STORAGE_TABLE_NAME__&#39;)](#31-单元测试中循环命令报错尝试去索引一个null值-全局-local_storage_table_name)
+  - [3.1. 单元测试中循环命令报错：尝试去索引一个null值 (全局 \'__LOCAL_STORAGE_TABLE_NAME__')](#31-单元测试中循环命令报错尝试去索引一个null值-全局-local_storage_table_name)
   - [3.2. Excel读取数据，数组中显示的元素类型与实际元素类型不一致](#32-excel读取数据数组中显示的元素类型与实际元素类型不一致)
 - [4. 来也UiBot认证相关思维导图](#4-来也uibot认证相关思维导图)
 - [5. 部分常见场景的处理思路](#5-部分常见场景的处理思路)
   - [5.1. 浏览器「打开」或「另存为」窗口的文件路径选择](#51-浏览器打开或另存为窗口的文件路径选择)
   - [5.2. 对于快速消失目标的选择方式](#52-对于快速消失目标的选择方式)
+  - [5.3. 鼠标点选日期](#53-鼠标点选日期)
+    - [5.3.1. 「获取子元素」、「获取元素文本」命令结合使用](#531-获取子元素获取元素文本命令结合使用)
 - [6. UiBot代码相关知识](#6-uibot代码相关知识)
   - [6.1. 「在目标中输入」命令，【系统消息】、【后台输入】、【模拟输入】三者之间的区别、适用情况](#61-在目标中输入命令系统消息后台输入模拟输入三者之间的区别适用情况)
 - [7. 项目过程中用过的命令库和脚本](#7-项目过程中用过的命令库和脚本)
@@ -258,6 +260,112 @@ UiBotCreator5.6.X版本，在Excel-读取区域、读取行、读取列命令中
 3. 在3秒内进行人工操作，使待选取目标出现；
 4. 3秒计时结束后，正好待选取目标提示方框未消且目标选取的延迟结束，就可以进行选取了。
 
+## 5.3. 鼠标点选日期
+
+在项目实施过程中，有的时候会遇到需要选择具体日期，且日期无法通过文本直接输入，只能鼠标点击，对此介绍一种适用情况较多的处理思路。
+
+### 5.3.1. 「获取子元素」、「获取元素文本」命令结合使用
+
+![](image/README/1652850476745.png)
+
+第一个例子，这个日期选择框是使用HTML的Table相关标签组成的，通过UiBotCreator内置的UI分析器，我们可以看出来它的TBODY（TableBody）包含7个TR（TableRow）组成，每个TR包含7个TD（TableData）。
+
+![img](image/README/1652850642610.png)
+
+![](image/README/1652850359683.png)
+
+需要注意的是，一般的每月日历表格中，每行会显示7天，第一行可能上月的22-31日，最后一行可能包含了下月的1-6日。
+
+那么我们假设需要选择2022年5月5日，大概思路：
+
+1. 创建2个Boolean变量，分别用于标记是否找到了当月的第一日（称其为「月初标记」；是否找到了目标日期（称其为「寻找完成标记」）。
+2. 针对TBODY元素，使用「获取子元素」命令，获取包含多个TR元素的数组（称其为「TR数组」）；
+3. 遍历TR数组，
+   1. 针对每个TR元素，使用「获取子元素」命令，获取包含多个TD元素的数组（称其为「TD数组」）；
+   2. 遍历TD数组，针对每个TD元素，使用「获取元素文本」命令；
+      1. 如果元素的文本为"1"，表示我们找到了当月的第一天，月初标记设置为为真。否则继续循环处理；
+      2. 如果月初标记为真，且元素文本为"5"，说明就是我们要找的日期，点击该元素，寻找完成标记设置为真，退出循环；
+   3. 如果寻找完成标记为真，则退出循环，否则继续下一次遍历；
+
+由于这个网站不方便公开，所以就不放代码了，第二个例子会给出代码。
+
+![](image/README/1652851240804.png)
+
+![](image/README/1652851285183.png)
+
+第二个例子，可访问[http://tools.2345.com/rili.htm](http://tools.2345.com/rili.htm)进行测试，
+
+这个日期选择框是一个有序列表（ol，ordered list）内包含了多个列表项（li），每个列表项表示一日。
+
+思路和第一个例子差不多，代码如下：
+
+```UiBot
+Rem 代码中使用 UiBot 5.6.2，谷歌浏览器
+
+Rem 填写年月日
+arrRet = 返回年月日()
+Rem 激活并重置谷歌浏览器窗口
+Window.SetActive({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*-2345万年历 - Google Chrome","app":"chrome"}]})
+Keyboard.Press("F5", "press", [],{"iDelayAfter":300,"iDelayBefore":200,"sSimulate":"simulate"})
+Rem 拆分出来年月日。
+年 = arrRet[0]
+月 = arrRet[1]
+日 = arrRet[2]
+TracePrint(年&月&日)
+
+点击年份(年)
+点击月份(月)
+点击日(日)
+
+Function 返回年月日()
+	输入时间 = Dialog.InputBox("输入1991-2049之间的日期，如2016-09-09","UiBot","2016-09-09",False)
+	arrRet = Split(输入时间,"-")
+	Return arrRet
+End Function
+
+Function 点击年份(年)
+	年 = CInt(年)
+	Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"DIV","parentid":"wrap","css-selector":"body>div>div>div>div>div"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"simulate","bMoveSmoothly":False})
+	索引 = 年-1901
+	Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"LI","idx":索引}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"simulate","bMoveSmoothly":False})
+End Function
+
+Function 点击月份(月)
+	月 = LTrim(月,"0")
+	月 = CInt(月)
+	Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"DIV","parentid":"wrap","css-selector":"body>div>div>div>div>div","idx":1}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"simulate","bMoveSmoothly":False})
+	索引 = 月-1
+	Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"LI","parentid":"select-month","idx":索引}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"simulate","bMoveSmoothly":False})
+End Function
+
+Function 点击日(日)
+	月初标记  = False
+    寻找完成标记  = False
+    日 = LTrim(日,"0")
+    arrElement = UiElement.GetChildren({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"OL"}]},1,{"bContinueOnError":False,"iDelayAfter":20,"iDelayBefore":20})
+    For Each value In arrElement
+        temp  = UiElement.GetValue(value, {"bContinueOnError": False, "iDelayAfter": 20, "iDelayBefore":20})
+        TracePrint($PrevResult)
+        temp = DigitFromStr(temp)
+        TracePrint($PrevResult)
+        If temp="1" And 月初标记 = False
+            月初标记 = True
+            TracePrint("找到月初。")
+        End If
+        If temp=日 And 月初标记 = True
+            寻找完成标记 = True
+            Mouse.Action(value, "left", "click", 10000, {"bContinueOnError": False, "iDelayAfter": 300, "iDelayBefore": 200, "bSetForeground": True, "sCursorPosition": "Center", "iCursorOffsetX": 0, "iCursorOffsetY": 0, "sKeyModifiers": [], "sSimulate":"simulate", "bMoveSmoothly":False})
+            Break
+        End If
+    Next
+    If 寻找完成标记  = False
+        TracePrint("没有找到对应日期。")
+    End If
+End Function
+```
+
+
+
 # 6. UiBot代码相关知识
 
 ## 6.1. 「在目标中输入」命令，【系统消息】、【后台输入】、【模拟输入】三者之间的区别、适用情况
@@ -356,7 +464,7 @@ UiBot可以连接并操作多种常见数据库，中大型企业的RPA项目往
 
 注意不同编程语言、软件对于正则表达式的支持情况是不同的，新手入门的话，我个人推荐这个教程：
 
-[ learn-regex](https://github.com/ziishaned/learn-regex/blob/master/translations/README-cn.md " learn-regex")
+[learn-regex](https://github.com/ziishaned/learn-regex/blob/master/translations/README-cn.md "learn-regex")
 
 正则表达式测试网站推荐（就是上述教程页面中的在线练习网站）：
 
