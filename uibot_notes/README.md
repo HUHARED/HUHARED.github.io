@@ -412,7 +412,7 @@ End Function
 * send_general_text_messages(webhook, dingMessage)
   * 使用自定义关键词方式发送消息到钉钉；
   * webhook参数来自钉钉机器人的设置
-  * dingMessagedin参数是一个字典，我常用的字典结构：`{"msgtype": "text","text": {"content": "消息文本（注意必须包含机器人设置中的关键词）"},"at": {"atMobiles":["18888888888"],"atUserIds":[""],"isAtAll": False}}`注意消息文本中
+  * dingMessagedin参数是一个字典，我常用的字典结构：`{"msgtype": "text","text": {"content": "消息文本（注意必须包含机器人设置中的关键词）"},"at": {"atMobiles":["18888888888"],"atUserIds":[""],"isAtAll": False}}`
 
 详细的钉钉机器人设置参考[官方文档](https://open.dingtalk.com/document/robots/custom-robot-access)。
 
