@@ -403,7 +403,7 @@ End Function
 
 ![](image/README/1653555003704.png)
 
-以下是我平时用的钉钉发送通知的Python脚本[dingtalk_message_robot.py](.\Python脚本\dingtalk_message_robot.py)，其中包含两个函数，使用其中一个就可以了，我一般使用的是「自定义关键词方式」：
+以下是我平时用的钉钉发送通知的Python脚本[dingtalk_message_robot.py](./Python脚本/dingtalk_message_robot.py)，其中包含两个函数，使用其中一个就可以了，我一般使用的是「自定义关键词方式」：
 
 * send_signed_text_messages(sign, webhook, dingMessage)
   * 使用加签方式（sign）发送消息到钉钉；
