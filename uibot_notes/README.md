@@ -18,8 +18,9 @@
     - [5.3.1. 「获取子元素」、「获取元素文本」命令结合使用](#531-获取子元素获取元素文本命令结合使用)
 - [6. UiBot代码相关知识](#6-uibot代码相关知识)
   - [6.1. 「在目标中输入」命令，【系统消息】、【后台输入】、【模拟输入】三者之间的区别、适用情况](#61-在目标中输入命令系统消息后台输入模拟输入三者之间的区别适用情况)
-- [7. 项目过程中用过的命令库和脚本](#7-项目过程中用过的命令库和脚本)
+- [7. 命令库和脚本](#7-命令库和脚本)
   - [7.1. Python脚本](#71-python脚本)
+    - [7.1.1. 钉钉群机器人发送通知](#711-钉钉群机器人发送通知)
   - [7.2. UiBot命令库](#72-uibot命令库)
 - [8. UiBot相关教程](#8-uibot相关教程)
   - [8.1. UiBot企业级流程模版](#81-uibot企业级流程模版)
@@ -154,8 +155,8 @@ Worker同理，通过这种方式，可以实现同一台同时运行多个程�
 
 使用更合适的通配符，可以在一些情况下更精准地选取到目标元素。
 
-* 通配符`*`：表示任意数量字符（0个或多个）
-* 通配符`?`：表示任意1个字符
+* 通配符 `*`：表示任意数量字符（0个或多个）
+* 通配符 `?`：表示任意1个字符
 
 # 3. UiBot软件本身错误情况与解决方案
 
@@ -390,11 +391,70 @@ End Function
 2. 消息
 3. 后台
 
-# 7. 项目过程中用过的命令库和脚本
+# 7. 命令库和脚本
 
 ## 7.1. Python脚本
 
-待更新。
+### 7.1.1. 钉钉群机器人发送通知
+
+企业微信、钉钉、飞书都有群机器人的接口，与RPA程序结合，就可以实现运行监控、异常通知等功能。有的RPA软件也内置了相关功能。
+
+![](image/README/1653554761878.png)
+
+![](image/README/1653555003704.png)
+
+以下是我平时用的钉钉发送通知的Python脚本[dingtalk_message_robot.py](.\Python脚本\dingtalk_message_robot.py)，其中包含两个函数，使用其中一个就可以了，我一般使用的是「自定义关键词方式」：
+
+* send_signed_text_messages(sign, webhook, dingMessage)
+  * 使用加签方式（sign）发送消息到钉钉；
+  * sign、webhook参数来自钉钉机器人的设置
+  * dingMessagedin参数是一个字典，我常用的字典结构：`{"msgtype": "text","text": {"content": "消息文本"},"at": {"atMobiles":["18888888888"],"atUserIds":[""],"isAtAll": False}}`
+* send_general_text_messages(webhook, dingMessage)
+  * 使用自定义关键词方式发送消息到钉钉；
+  * webhook参数来自钉钉机器人的设置
+  * dingMessagedin参数是一个字典，我常用的字典结构：`{"msgtype": "text","text": {"content": "消息文本（注意必须包含机器人设置中的关键词）"},"at": {"atMobiles":["18888888888"],"atUserIds":[""],"isAtAll": False}}`注意消息文本中
+
+详细的钉钉机器人设置参考[官方文档](https://open.dingtalk.com/document/robots/custom-robot-access)。
+
+![](image/README/1653555852946.png)
+
+![](image/README/1653556075313.png)
+
+![](image/README/1653555860356.png)
+
+示例代码、截图：
+
+```UiBot
+Rem 自定义关键词方式调用
+
+webhook = ""//webhook来自钉钉的群机器人（智能群助手）设置
+电话号码数组   = [""] // 填写需要@的人员的电话号码，或者保持数组内是一个空字符串
+
+消息文本 = "测试文本。（自定义关键词方式）"
+钉钉消息字典={"msgtype": "text","text": {"content": 消息文本},"at": {"atMobiles":电话号码数组,"atUserIds":[""],"isAtAll": False}}
+钉钉消息机器人返回结果 = dingtalk_message_robot.send_general_text_messages(webhook, 钉钉消息字典)
+TracePrint(钉钉消息机器人返回结果)
+```
+
+![](image/README/1653556462760.png)
+
+![](image/README/1653556483486.png)
+
+```UiBot
+Rem 加签方式调用
+
+sign = "" // sign来自钉钉的群机器人（智能群助手）设置
+webhook = ""//webhook来自钉钉的群机器人（智能群助手）设置
+电话号码数组   = [""] // 填写需要@的人员的电话号码，或者保持数组内是一个空字符串
+消息文本 = "测试文本（加签）"
+钉钉消息字典={"msgtype": "text","text": {"content": 消息文本},"at": {"atMobiles":电话号码数组,"atUserIds":[""],"isAtAll": False}}
+钉钉消息机器人返回结果 = dingtalk_message_robot.send_signed_text_messages(sign,webhook, 钉钉消息字典)
+TracePrint(钉钉消息机器人返回结果)
+```
+
+![](image/README/1653556674696.png)
+
+![](image/README/1653556688243.png)
 
 ## 7.2. UiBot命令库
 
