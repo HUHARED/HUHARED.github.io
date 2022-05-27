@@ -422,6 +422,10 @@ End Function
 
 ![](image/README/1653555860356.png)
 
+调用前要把Python脚本放到项目文件夹的 `\extend\python`路径下。
+
+![img](image/README/1653616912598.png)
+
 示例代码、截图：
 
 ```UiBot
