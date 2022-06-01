@@ -555,10 +555,10 @@ TracePrint(文件全路径)
 Rem 自定义关键词方式调用
 
 webhook = ""//webhook来自钉钉的群机器人（智能群助手）设置
-电话号码数组   = [""] // 填写需要@的人员的电话号码，或者保持数组内是一个空字符串
+电_话号码数组   = [""] // 填写需要@的人员的电_话号码，或者保持数组内是一个空字符串
 
 消息文本 = "测试文本。（自定义关键词方式）"
-钉钉消息字典={"msgtype": "text","text": {"content": 消息文本},"at": {"atMobiles":电话号码数组,"atUserIds":[""],"isAtAll": False}}
+钉钉消息字典={"msgtype": "text","text": {"content": 消息文本},"at": {"atMobiles":电_话号码数组,"atUserIds":[""],"isAtAll": False}}
 钉钉消息机器人返回结果 = dingtalk_message_robot.send_general_text_messages(webhook, 钉钉消息字典)
 TracePrint(钉钉消息机器人返回结果)
 ```
@@ -572,9 +572,9 @@ Rem 加签方式调用
 
 sign = "" // sign来自钉钉的群机器人（智能群助手）设置
 webhook = ""//webhook来自钉钉的群机器人（智能群助手）设置
-电话号码数组   = [""] // 填写需要@的人员的电话号码，或者保持数组内是一个空字符串
+电_话号码数组   = [""] // 填写需要@的人员的电_话号码，或者保持数组内是一个空字符串
 消息文本 = "测试文本（加签）"
-钉钉消息字典={"msgtype": "text","text": {"content": 消息文本},"at": {"atMobiles":电话号码数组,"atUserIds":[""],"isAtAll": False}}
+钉钉消息字典={"msgtype": "text","text": {"content": 消息文本},"at": {"atMobiles":电_话号码数组,"atUserIds":[""],"isAtAll": False}}
 钉钉消息机器人返回结果 = dingtalk_message_robot.send_signed_text_messages(sign,webhook, 钉钉消息字典)
 TracePrint(钉钉消息机器人返回结果)
 ```
