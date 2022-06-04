@@ -293,7 +293,7 @@ UiBotCreator5.6.X版本，在Excel-读取区域、读取行、读取列命令中
 
 ![](image/README/1652850359683.png)
 
-需要注意的是，一般的每月日历表格中，每行会显示7天，第一行可能上月的22-31日，最后一行可能包含了下月的1-6日。
+需要注意的是，一般的每月日历表格中，每行会显示7天，第一行可能包含上月的22-31日，最后一行可能包含下月的1-6日。
 
 那么我们假设需要选择2022年5月5日，大概思路：
 
@@ -436,7 +436,6 @@ End Function
 示例代码（5.6.0版本及以上）：
 
 ```UiBot
-
 浏览器默认下载路径    = '''C:\Users\XXX\Downloads\'''
 
 UiElement.Wait({"wnd":[{"app":"chrome","cls":"Chrome_WidgetWin_1","title":"UiBot版本更新日志-通知公告-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区 - Google Chrome"}],"ctrl":[{"role":"ROLE_SYSTEM_PANE","name":"UiBot版本更新日志-通知公告-UiBot RPA技术开发交流社区 - RPA机器人流程自动化 - UiBot RPA开发者社区 - Google Chrome"},{"role":"ROLE_SYSTEM_PANE","name":"Google Chrome"},{"role":"ROLE_SYSTEM_GROUPING","name":"下载内容栏"},{"role":"ROLE_SYSTEM_GROUPING","name":" UiBot_Community_Official_X64_V?.?.?_????.??.??.*.exe"},{"role":"ROLE_SYSTEM_PUSHBUTTON","name":" UiBot_Community_Official_X64_V?.?.?_????.??.??.*.exe"}]}, "show", 10000, {"bContinueOnError": False, "iDelayAfter": 300, "iDelayBefore":200})
