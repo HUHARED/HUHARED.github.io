@@ -16,6 +16,8 @@
   - [5.2. 对于快速消失目标的选择方式](#52-对于快速消失目标的选择方式)
   - [5.3. 鼠标点选日期](#53-鼠标点选日期)
     - [5.3.1. 「获取子元素」、「获取元素文本」命令结合使用](#531-获取子元素获取元素文本命令结合使用)
+      - [5.3.1.1. 示例1](#5311-示例1)
+      - [5.3.1.2. 示例2](#5312-示例2)
   - [5.4. 下载网页文件之后获取文件全路径](#54-下载网页文件之后获取文件全路径)
     - [5.4.1. 集合相关命令，取差集](#541-集合相关命令取差集)
     - [5.4.2. 获取浏览器下载栏中元素文本，与指定下载路径拼接](#542-获取浏览器下载栏中元素文本与指定下载路径拼接)
@@ -285,13 +287,15 @@ UiBotCreator5.6.X版本，在Excel-读取区域、读取行、读取列命令中
 
 ### 5.3.1. 「获取子元素」、「获取元素文本」命令结合使用
 
-![](image/README/1652850476745.png)
+#### 5.3.1.1. 示例1
 
-第一个例子，这个日期选择框是使用HTML的Table相关标签组成的，通过UiBotCreator内置的UI分析器，我们可以看出来它的TBODY（TableBody）包含7个TR（TableRow）组成，每个TR包含7个TD（TableData）。
+![1655898574458](image/README/1655898574458.png)
 
-![img](image/README/1652850642610.png)
+第一个例子，可访问[https://wallstreetcn.com/calendar](https://wallstreetcn.com/calendar)进行测试，这个日期选择框是使用HTML的Table相关标签组成的，通过UiBotCreator内置的UI分析器，我们可以看出来它的TBODY（TableBody）包含7个TR（TableRow）组成，每个TR包含7个TD（TableData）。
 
-![](image/README/1652850359683.png)
+![1655898557820](image/README/1655898557820.png)
+
+![1655898602899](image/README/1655898602899.png)
 
 需要注意的是，一般的每月日历表格中，每行会显示7天，第一行可能包含上月的22-31日，最后一行可能包含下月的1-6日。
 
@@ -306,7 +310,62 @@ UiBotCreator5.6.X版本，在Excel-读取区域、读取行、读取列命令中
       2. 如果月初标记为真，且元素文本为"5"，说明就是我们要找的日期，点击该元素，寻找完成标记设置为真，退出循环；
    3. 如果寻找完成标记为真，则退出循环，否则继续下一次遍历；
 
-由于这个网站不方便公开，所以就不放代码了，第二个例子会给出代码。
+示例代码：
+
+```UiBot
+Rem 年、月的选择一般更简单，代码演示就不涉及了。直接给出某一日。
+目标日期  = "01"
+Rem 创建两个标记
+是否找到月初    = False
+是否找到目标日期      = False
+Rem 获取TBODY的子元素列表（TR，表格的行）
+#icon("@res:default.png")
+TR数组    = UiElement.GetChildren({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TBODY"}]},1,{"bContinueOnError":False,"iDelayAfter":20,"iDelayBefore":20})
+For Each TR In TR数组
+	Rem 外层遍历，获取TR的子元素列表（TD，单元格）
+	#icon("@res:default.png")
+	TD数组    = UiElement.GetChildren(TR,1,{"bContinueOnError":False,"iDelayAfter":20,"iDelayBefore":20})
+
+	For Each TD In TD数组
+		Rem 内层遍历，获取当前单元格的文本，并进行判断
+
+		#icon("@res:default.png")
+		日期文本    = UiElement.GetValue(TD, {"bContinueOnError": False, "iDelayAfter": 20, "iDelayBefore":20})
+		TracePrint(日期文本)
+		If 日期文本="01"
+			Rem 如果找到月初，标记一下
+			是否找到月初    = True
+
+		Else
+
+		End If
+		If 日期文本=目标日期 And 是否找到月初=True   
+
+			Rem 如果已经找到了月初，且当前单元格的日期和目标日期一样，就点击它，然后标记已找到目标日期，以便外层循环的跳出。
+			#icon("@res:default.png")
+			Mouse.Action(TD, "left", "click", 10000, {"bContinueOnError": False, "iDelayAfter": 300, "iDelayBefore": 200, "bSetForeground": True, "sCursorPosition": "Center", "iCursorOffsetX": 0, "iCursorOffsetY": 0, "sKeyModifiers": [], "sSimulate":"simulate", "bMoveSmoothly":False})
+			是否找到目标日期      = True
+			Rem 找到目标日期了，没必要继续遍历下去了，退出内层循环。（退出循环命令只对当前循环代码块生效，想直接退出多层循环的话，可以封装为子程序，然后return，或直接exit()退出流程）
+			Break
+		Else
+
+		End If
+	Next
+	If 是否找到目标日期 = True
+		Rem 内层循环找到目标日期的话，退出外层循环。
+
+		Break
+	Else
+
+	End If
+Next
+
+
+
+
+```
+
+#### 5.3.1.2. 示例2
 
 ![](image/README/1652851240804.png)
 
@@ -424,6 +483,12 @@ End Function
 所以，当我们要下载的文件的名称不固定的时候，在「等待元素」、「获取元素文本」命令中使用通配符（通配符如何更精准的使用，可查看本笔记2.3章节），就可以很方便的「实现等待文件下载完成，然后获取文件名称」。
 
 将文件名称最前面的多余空格去掉，再与浏览器下载文件夹路径拼接（我的下载文件夹就是浏览器默认的，实际编程中根据自己情况修改），就是刚才下载好的文件全路径了。
+
+**注意，小文件可能会在下载完成之前，就能获取到文件名（元素文本不会像上面说的那样，包含下载进度），这种情况下，要结合「判断文件是否存在」来使用**，再具体点说：
+
+1. 获取到文件名称后，写个循环，每隔1秒判断文件是否存在;
+2. 如果不存在，则继续循环;
+3. 如果存在，则结束循环，进行后续处理。
 
 ![](image/README/1653800328316.png)
 
