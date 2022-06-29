@@ -1,5 +1,4 @@
 # 目录
-
 - [1. 前言](#1-前言)
 - [2. 一些UiBot软件使用技巧](#2-一些uibot软件使用技巧)
   - [2.1. 更改Creator【我的收藏】命令树下的命令顺序](#21-更改creator我的收藏命令树下的命令顺序)
@@ -8,7 +7,7 @@
     - [2.2.2. Worker](#222-worker)
   - [2.3. 通配符的支持情况](#23-通配符的支持情况)
 - [3. UiBot软件本身错误情况与解决方案](#3-uibot软件本身错误情况与解决方案)
-  - [3.1. 单元测试中循环命令报错：尝试去索引一个null值 (全局 \'__LOCAL_STORAGE_TABLE_NAME__&#39;)](#31-单元测试中循环命令报错尝试去索引一个null值-全局-local_storage_table_name)
+  - [3.1. 单元测试中循环命令报错：尝试去索引一个null值 (全局 \'__LOCAL_STORAGE_TABLE_NAME__')](#31-单元测试中循环命令报错尝试去索引一个null值-全局-local_storage_table_name)
   - [3.2. Excel读取数据，数组中显示的元素类型与实际元素类型不一致](#32-excel读取数据数组中显示的元素类型与实际元素类型不一致)
 - [4. 来也UiBot认证相关思维导图](#4-来也uibot认证相关思维导图)
 - [5. 部分常见场景的处理思路](#5-部分常见场景的处理思路)
@@ -37,7 +36,11 @@
 - [9. UiBot项目实施可能涉及技术的教程](#9-uibot项目实施可能涉及技术的教程)
   - [9.1. SQL](#91-sql)
   - [9.2. 正则表达式](#92-正则表达式)
-- [10. 许可证](#10-许可证)
+- [10. 辅助软件&网站](#10-辅助软件网站)
+  - [10.1. Ditto——增强剪贴板功能](#101-ditto增强剪贴板功能)
+  - [10.2. Snipaste——强大且便利的截图贴图工具](#102-snipaste强大且便利的截图贴图工具)
+  - [10.3. 字符编码检查](#103-字符编码检查)
+- [11. 许可证](#11-许可证)
 
 # 1. 前言
 
@@ -739,6 +742,66 @@ UiBot可以连接并操作多种常见数据库，中大型企业的RPA项目往
 
 ![](image/README/1652500309146.png)
 
-# 10. 许可证
+# 10. 辅助软件&网站
+
+介绍一些我在项目实施过程中常用的软件&网站。
+
+## 10.1. Ditto——增强剪贴板功能
+
+在UiBot编程过程中，我们复制了好几个变量，或者之前的某些内容，需要来回的重复使用它们，就可以通过剪贴板工具保存并使用它们。
+
+有两种方式：
+
+* Win10及Win11内置的剪贴板功能；
+  * 使用Win+V键调出；
+  * 教程说明：[https://support.microsoft.com/zh-cn/windows/%E5%89%AA%E8%B4%B4%E6%9D%BFwindows-c436501e-985d-1c8d-97ea-fe46ddf338c6](https://support.microsoft.com/zh-cn/windows/%E5%89%AA%E8%B4%B4%E6%9D%BFwindows-c436501e-985d-1c8d-97ea-fe46ddf338c6)
+* Ditto
+  * 使用 `Ctrl +`（反引号）`，也就是键盘左上角退出键下面的那个按键，调出。
+  * 官方下载：[https://ditto-cp.sourceforge.io](https://ditto-cp.sourceforge.io)
+  * 教程说明：[https://zhuanlan.zhihu.com/p/137619762](https://zhuanlan.zhihu.com/p/137619762)
+
+![1656506046138](image/README/1656506046138.gif)
+
+
+## 10.2. Snipaste——强大且便利的截图贴图工具
+
+Snipaste这个软件我经常用它来截图、贴图。
+
+比如在项目实施过程中，想要比较两个元素的特征值有什么区别，就可以用UiBot选取目标取特征值，然后截图，贴图，把它们放在一起很方便的进行比较。
+
+* 官方下载：[https://zh.snipaste.com](https://zh.snipaste.com)
+* 教程说明：[https://docs.snipaste.com/zh-cnhttps://docs.snipaste.com/zh-c]()
+
+
+
+![1656506336676](image/README/1656506336676.png)
+
+
+## 10.3. 字符编码检查
+
+网站：[http://www.mytju.com/classcode/tools/encode_utf8.asp](http://www.mytju.com/classcode/tools/encode_utf8.asp)
+
+当我们处理来自各种杂七杂八来源的文本的时候，有的字符的样子非常接近，但说到底不是同一个字符，如果我们想要进行替换等操作，就会发现不符合预期。
+
+我们在UiBot打印一些我在项目实施过程中混淆过的字符看一下：
+
+```UiBot
+Rem 打印常见空格
+TracePrint(" ")
+Rem 打印CA20空格
+TracePrint(" ")
+Rem 打印半角元
+TracePrint("¥")
+Rem 打印全角元
+TracePrint("￥")
+
+```
+
+![1656506448057](image/README/1656506448057.png)
+
+全角半角仔细看的话，字符串宽度不一样，还算好区分，而CA20空格和常见空格，用肉眼就完全看不出来区别了，此时就可以借助字符编码检查网站，来观察字符到底是什么。
+
+
+# 11. 许可证
 
 [MIT License](../LICENSE "开源许可证")
