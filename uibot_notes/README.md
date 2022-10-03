@@ -23,6 +23,7 @@
     - [5.4.2. 获取浏览器下载栏中元素文本，与指定下载路径拼接](#542-获取浏览器下载栏中元素文本与指定下载路径拼接)
     - [5.4.3. 使用UiBot内置的「下载文件」命令](#543-使用uibot内置的下载文件命令)
     - [5.4.4. 使用其他工程师发布的插件](#544-使用其他工程师发布的插件)
+    - [5.4.5. 网页表格依次处理每一行](#545-网页表格依次处理每一行)
 - [6. UiBot代码相关知识](#6-uibot代码相关知识)
   - [6.1. 键盘、鼠标相关命令，操作类型参数中，【系统消息】、【后台输入】、【模拟输入】三者之间的区别、适用情况](#61-键盘鼠标相关命令操作类型参数中系统消息后台输入模拟输入三者之间的区别适用情况)
   - [6.2. 项目文件夹结构与不同文件作用](#62-项目文件夹结构与不同文件作用)
@@ -286,9 +287,14 @@ UiBotCreator5.6.X版本，在Excel-读取区域、读取行、读取列命令中
 3. 在3秒内进行人工操作，使待选取目标出现；
 4. 3秒计时结束后，正好待选取目标提示方框未消失且目标选取的延迟结束，就可以进行选取了。
 
+相关视频教程链接：[常见RPA场景解决方案 (回放+源码)——快速消失目标的选择（29:20 - 32:30）](https://mp.weixin.qq.com/s/iTqDuYeLvIM2HGV63WxPZw)
+
+
 ## 5.3. 鼠标点选日期
 
 在项目实施过程中，有的时候会遇到需要选择具体日期，且日期无法通过文本直接输入，只能鼠标点击，对此介绍一种适用情况较多的处理思路。
+
+相关视频教程链接：[常见RPA场景解决方案 (回放+源码)——网页日历选择日期（15:42 - 29:12）](https://mp.weixin.qq.com/s/iTqDuYeLvIM2HGV63WxPZw)
 
 ### 5.3.1. 「获取子元素」、「获取元素文本」命令结合使用
 
@@ -548,6 +554,54 @@ TracePrint(文件全路径)
 ### 5.4.4. 使用其他工程师发布的插件
 
 具体请查看：[新增文件监测插件FolderWatch](https://forum.uibot.com.cn/thread-12555.htm)
+
+### 5.4.5. 网页表格依次处理每一行
+
+相关视频教程链接：[常见RPA场景解决方案 (回放+源码)——网页表格依次处理每一行  （01:55 - 15:40）](https://mp.weixin.qq.com/s/iTqDuYeLvIM2HGV63WxPZw)
+网页表格的处理，是RPA实施过程中非常常见的一种场景，我们可能要对表格中的每一行都进行同样的操作，比如获取表格中的内容，或者点击表格中的某些按钮。
+
+主要知识点：
+
+* 在元素特征值中使用变量。（通常使用递增的整数类型，从1计数，转为字符串类型后填入特征值中）
+* 使用「计次循环」命令
+
+示例网站：[https://www.nmpa.gov.cn/datasearch/search-result.html](https://www.nmpa.gov.cn/datasearch/search-result.html)
+
+我们在上面的网站搜索之后，使用UI分析器观察每个单元格，会看到有tableRow（表格行），tableCol（table Column，表格列）的字段，将递增的整数类型变量转为字符串类型之后，填写到对应字段，即可实现遍历每一行。
+
+注意，如果是第一行或第一列的单元格元素，可能选取元素的时候，默认不显示tableRow、tableCol字段，其实是UiBot把tableRow="1"、tableCol="1"的情况默认省略了，手动添加上效果一样。
+
+![1664800485553](image/README/1664800485553.png)
+
+![1664800768097](image/README/1664800768097.png)
+
+![1664800741255](image/README/1664800741255.png)
+
+![1664800820168](image/README/1664800820168.png)
+
+示例代码：
+
+```UiBot
+hWeb = WebBrowser.BindBrowser("chrome",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+objWindow = PrintToScreen.CreateWindow({"width":400,"height":200,"x":0,"y":0,"resolution":{"width":1920,"height":1080}},True)
+For 行号 = 1 To 10 Step 1 
+
+	Rem 获取批准文号，写屏，观察tableRow变量：递增，并转为字符串之后再填到元素特征值中。
+	#icon("@res:98up6r6r-vpkq-h94g-if1h-9hmua1l7u73i.png")
+	当前行批准文号  = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","idx":1},{"tag":"TD","tableRow":行号&"","tableCol":"4"}]}, {"bContinueOnError": False, "iDelayAfter": 300, "iDelayBefore":200})
+	PrintToScreen.DrawText(objWindow,当前行批准文号,18,[255,0,255])
+	Rem 点击每一行的「详情」按钮，（假设进行了所需的业务操作后）再关闭当前标签页，回到检索结果页面。
+	#icon("@res:52s2rqe8-3odu-9ho9-96qd-vqbn5u4b82g9.png")
+	Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","idx":1},{"tag":"TD","tableRow":CStr(行号),"tableCol":"5"}]}, "left", "click", 10000, {"bContinueOnError": False, "iDelayAfter": 300, "iDelayBefore": 200, "bSetForeground": True, "sCursorPosition": "Center", "iCursorOffsetX": 0, "iCursorOffsetY": 0, "sKeyModifiers": [], "sSimulate":"simulate", "bMoveSmoothly":False})
+	Rem 等待详情界面加载完成
+	#icon("@res:4c5ru8fd-79mk-s1cr-63sg-b36dq4jhj1n3.png")
+	UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","parentid":"printTable"}]}, "show", 10000, {"bContinueOnError": False, "iDelayAfter": 300, "iDelayBefore":200})
+	PrintToScreen.DrawText(objWindow,"进行业务操作，然后关闭详情页。",18,[255,0,255])
+	WebBrowser.Close(hWeb,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+Next
+
+
+```
 
 # 6. UiBot代码相关知识
 
