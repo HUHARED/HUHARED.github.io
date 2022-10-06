@@ -23,13 +23,16 @@
     - [5.4.2. 获取浏览器下载栏中元素文本，与指定下载路径拼接](#542-获取浏览器下载栏中元素文本与指定下载路径拼接)
     - [5.4.3. 使用UiBot内置的「下载文件」命令](#543-使用uibot内置的下载文件命令)
     - [5.4.4. 使用其他工程师发布的插件](#544-使用其他工程师发布的插件)
-    - [5.4.5. 网页表格依次处理每一行](#545-网页表格依次处理每一行)
+  - [5.5. 网页表格依次处理每一行](#55-网页表格依次处理每一行)
+  - [5.6. 跳过Excel中已处理的行](#56-跳过excel中已处理的行)
+  - [5.7. 超长下拉框内选项元素无法正常点击的几种解决方案](#57-超长下拉框内选项元素无法正常点击的几种解决方案)
 - [6. UiBot代码相关知识](#6-uibot代码相关知识)
   - [6.1. 键盘、鼠标相关命令，操作类型参数中，【系统消息】、【后台输入】、【模拟输入】三者之间的区别、适用情况](#61-键盘鼠标相关命令操作类型参数中系统消息后台输入模拟输入三者之间的区别适用情况)
   - [6.2. 项目文件夹结构与不同文件作用](#62-项目文件夹结构与不同文件作用)
   - [6.3. 公共流程块封装与调用](#63-公共流程块封装与调用)
     - [6.3.1. UiBot支持哪些不同类型的封装](#631-uibot支持哪些不同类型的封装)
   - [6.4. 遍历数组时获取元素索引](#64-遍历数组时获取元素索引)
+  - [6.5. UiBot浮点数四舍五入不正确的原因及解决方案](#65-uibot浮点数四舍五入不正确的原因及解决方案)
 - [7. 命令库和脚本](#7-命令库和脚本)
   - [7.1. Python脚本](#71-python脚本)
     - [7.1.1. Python脚本怎么用](#711-python脚本怎么用)
@@ -42,7 +45,7 @@
 - [9. UiBot项目实施可能涉及技术的教程](#9-uibot项目实施可能涉及技术的教程)
   - [9.1. SQL](#91-sql)
   - [9.2. 正则表达式](#92-正则表达式)
-- [10. 辅助软件&amp;网站](#10-辅助软件网站)
+- [10. 辅助软件和网站](#10-辅助软件和网站)
   - [10.1. Ditto——增强剪贴板功能](#101-ditto增强剪贴板功能)
   - [10.2. Snipaste——强大且便利的截图贴图工具](#102-snipaste强大且便利的截图贴图工具)
   - [10.3. 字符编码检查](#103-字符编码检查)
@@ -575,7 +578,7 @@ TracePrint(文件全路径)
 
 具体请查看：[新增文件监测插件FolderWatch](https://forum.uibot.com.cn/thread-12555.htm)
 
-### 5.4.5. 网页表格依次处理每一行
+## 5.5. 网页表格依次处理每一行
 
 相关视频教程链接：[常见RPA场景解决方案 (回放+源码)——网页表格依次处理每一行  （01:55 - 15:40）](https://mp.weixin.qq.com/s/iTqDuYeLvIM2HGV63WxPZw)
 网页表格的处理，是RPA实施过程中非常常见的一种场景，我们可能要对表格中的每一行都进行同样的操作，比如获取表格中的内容，或者点击表格中的某些按钮。
@@ -622,7 +625,7 @@ Next
 
 ```
 
-## 5.5. 跳过Excel中已处理的行
+## 5.6. 跳过Excel中已处理的行
 
 一般情况下，如果我们要处理的数据来自于Excel，每行数据对应着一次业务操作，当每一条数据完成时，不建议将处理完成的数据删掉，因为可能因为报错或其他原因需要重新运行，如果删掉了，不好恢复。
 
@@ -637,6 +640,7 @@ Next
 
 示例Excel文件：[示例_Excel跳过处理完成数据.xlsx](image/README/1665022093583.xlsx)
 示例代码：
+
 ```UiBot
 
 Rem 假设读取Excel中的数据（业务编号）进行业务处理，完成业务处理后，在对应行标注一下处理完成。
@@ -652,12 +656,12 @@ For Each 每行数据 In arrayRet
 	是否已处理完成   = 每行数据[3]
 	If 每行数据[3]="是"
 		TracePrint("当前行已处理，跳过。")
-	
+
 		Rem 不要忘记递增行索引，不然处理的就不是对应行了。
 		行索引 = 行索引+1
 		Continue
 	Else
-	
+
 	End If
 	TracePrint("假设进行业务处理……")
 	TracePrint("业务编号="&每行数据[0])
@@ -679,8 +683,89 @@ Excel.CloseExcel(objExcelWorkBook,True)
 
 相关视频教程链接：[开发者问题解答·第8期（回放+源码）——如何跳过Excel中已处理的行（01:31 - 16:37）](https://mp.weixin.qq.com/s/2XKa632SmO_xhpKgSrvr6A)
 
+## 5.7. 超长下拉框内选项元素无法正常点击的几种解决方案
+
+如果遇到选项很多，一页显示不完的下拉框时，直接点击选项框内的元素时，某些在下拉框底部的元素可能没法正常点击，会点到下拉框之外。
+出现这种情况，直接原因是——网页在构建这个下拉选项框的时候，下拉框区域有限（因为显示屏面积有限），有限区域内显示不了的元素，被自动设置为了不可见，而非不存在。虽然人眼看不到，但是UiBot是直接读取代码进行解析的，就会解析到。点击的时候，UiBot判断了选项位置并进行点击，但选项此时可能不在显示范围内，在当前显示范围的上方或下方，那么点击其实就是无效的。
+这里给出两种解决方案：
+
+1. 获取目标时，优先选择 `<li>`元素
+   1. 网页元素中，li元素点击时，UiBot一般可以自动翻页。
+   2. 可以结合「获取子元素、遍历数组、获取元素文本、条件分支」等命令，来依次判断下拉框中所有选项，找出目标选项并点击。
+   3. 示例网站：[http://tools.2345.com/rili.htm](http://tools.2345.com/rili.htm)
+2. 计算出目标选项索引，使用键盘方向键定位
+   1. 示例网站：[http://tools.2345.com/jrhl.htm](http://tools.2345.com/jrhl.htm)
+
+相关视频教程链接：[开发者问题解答·第9期（回放+源码）——超长下拉选项框，为何经常点击到框外？如何解决？（19:33 - 40:00）](https://mp.weixin.qq.com/s/C29w8_h4X3MrWcChjhBvKQ)
+
+方案1示例代码：
+
+```UiBot
+
+Rem 演示通过判断有序列表（ul）元素的子元素文本方式，来点击目标
+
+目标文本  = "1928年"
+#icon("@res:default.png")
+arrElement = UiElement.GetChildren({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"UL","id":"select-year"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+For Each value In arrElement
+
+	#icon("@res:default.png")
+	sRet = UiElement.GetValue(value,{"bContinueOnError":False,"iDelayAfter":20,"iDelayBefore":20})
+	TracePrint(sRet)
+	If sRet=目标文本 
+		#icon("@res:uif679ts-m1up-p62f-974p-agboqbt4jr02.png")
+		Mouse.Action({"wnd":[{"app":"chrome","cls":"Chrome_WidgetWin_1","title":"2022年万年历,农历日历,阴历阳历在线查询-2345万年历 - Google Chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window","aaname":"2022年万年历,农历日历,阴历阳历在线查询-2345万年历"}],"ctrl":[{"role":"ROLE_SYSTEM_DOCUMENT","name":"2022年万年历,农历日历,阴历阳历在线查询-2345万年历"},{"role":"ROLE_SYSTEM_STATICTEXT","name":"2014年"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"simulate","bMoveSmoothly":False})
+
+		#icon("@res:default.png")
+		Mouse.Action(value,"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"simulate","bMoveSmoothly":False})
+		Break
+	Else
+
+	End If
+Next
 
 
+```
+
+方案2示例代码：
+
+```UiBot
+Rem 演示通过判断文本、计算索引，点击方向键来定位元素
+
+目标点击文本   = "2038"
+#icon("@res:default.png")
+arrElement = UiElement.GetChildren({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SELECT","id":"s_year"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+按键计数  = 0
+For Each value In arrElement
+	#icon("@res:default.png")
+	sRet = UiElement.GetValue(value,{"bContinueOnError":False,"iDelayAfter":20,"iDelayBefore":20})
+
+	TracePrint(sRet)
+	If sRet=目标点击文本  
+
+		Break
+	Else
+
+	End If
+	按键计数 = 按键计数+1
+Next
+TracePrint("按键计数="&按键计数)
+#icon("@res:9kunh6rl-9t4q-infa-g5v1-0ft298923vfn.png")
+Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SELECT","id":"s_year"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"simulate","bMoveSmoothly":False})
+Rem 根据需要，可以按多次方向键上，来定位到第一个选项。
+For i = 1 To 40 Step 1 
+	Dialog.Notify("点击方向上计数="&i, "UiBot", "0")
+	Keyboard.Press("Up", "press", [],{"iDelayAfter":20,"iDelayBefore":20,"sSimulate":"simulate"})
+
+Next
+For i = 1 To 按键计数 Step 1 
+	Rem 如果按键计数=0（小于起始值），则计数循环内代码不会执行。
+	Dialog.Notify("点击方向下计数="&i, "UiBot", "0")
+	Keyboard.Press("Down", "press", [],{"iDelayAfter":20,"iDelayBefore":20,"sSimulate":"simulate"})
+
+Next
+Keyboard.Press("Enter", "press", [],{"iDelayAfter":300,"iDelayBefore":200,"sSimulate":"simulate"})
+```
 
 # 6. UiBot代码相关知识
 
@@ -747,6 +832,33 @@ Next
 
 key就是当前元素的索引，从0计数。我们可以在获取到索引之后，根据自己的需要直接用，或者进一步计算，来满足业务需求。
 相关视频教程链接：[开发者问题解答·第7期（回放+源码）——获取数组元素的索引（23:50 - 27:00）](https://mp.weixin.qq.com/s/KEEoaYEnq5GNrCl8K-8uZA)
+
+## 6.5. UiBot浮点数四舍五入不正确的原因及解决方案
+
+我们日常生活中，数学运算以十进制为主，而我们现在常用的计算机，底层是二进制的，将所有的数值都转换为了0和1，对应着计算机中电流、电压的变化。
+
+这种情况下，整数因为都可以通过0、1相加得到，所以都很精确，而小数，或者说浮点数，是通过将整数不断切分一半并相加相减，来尽量获取一个近似值，比如0.5就是把1切分一半，但是有的小数，比如三分之一，无论将多少个整数进行多少次对半切分，相加相减，都只能得到一个接近的值，而不是能用分数精确表示的三分之一。
+
+不同的编程语言、函数的舍入方法不同，不同的数据类型的精度、性能要求不一样，得出的结果也不同。
+
+推荐阅读：
+
+* [Python 为什么不解决四舍五入(round)的“bug”？](https://www.zhihu.com/question/20128906)
+* [计算机为什么采用二进制？](https://zhuanlan.zhihu.com/p/184518606)
+* [银行家舍入法的意义是什么？](https://www.zhihu.com/question/67680294)
+
+解决方案：
+
+* 如果数值来自Excel读取
+  * 5.6版本及之后，读取数据时的「显示及返回」参数选择「是」。获取字符串形式数值，然后再转换为浮点数。
+* 如果数值来自逻辑计算
+  * 如果精度要求不高
+    * 使用内置命令「数据处理-数学-取四舍五入值」
+  * 如果精度要求高
+    * 调用Python的Decimal库
+    * 参考论坛帖子：[https://forum.laiye.com/thread-12663.htm](https://forum.laiye.com/thread-12663.htm)
+
+相关视频教程链接：[开发者问题解答·第9期（回放+源码）——浮点数为何经常计算不正确？如何解决？（01:54 - 19:26）](https://mp.weixin.qq.com/s/C29w8_h4X3MrWcChjhBvKQ)
 
 # 7. 命令库和脚本
 
@@ -929,7 +1041,7 @@ UiBot可以连接并操作多种常见数据库，中大型企业的RPA项目往
 
 ![](image/README/1652500309146.png)
 
-# 10. 辅助软件&网站
+# 10. 辅助软件和网站
 
 介绍一些我在项目实施过程中常用的软件&网站。
 
