@@ -581,6 +581,7 @@ TracePrint(文件全路径)
 ## 5.5. 网页表格依次处理每一行
 
 相关视频教程链接：[常见RPA场景解决方案 (回放+源码)——网页表格依次处理每一行  （01:55 - 15:40）](https://mp.weixin.qq.com/s/iTqDuYeLvIM2HGV63WxPZw)
+
 网页表格的处理，是RPA实施过程中非常常见的一种场景，我们可能要对表格中的每一行都进行同样的操作，比如获取表格中的内容，或者点击表格中的某些按钮。
 
 主要知识点：
@@ -639,6 +640,7 @@ Next
 如果要处理的业务数据不是保存在Excel中的，而是需要读取数据库，比如MySQL、Oracle等，方法也是类似的，在数据库的对应表结构设计中，增加一列用于表示是否处理完成。
 
 示例Excel文件：[示例_Excel跳过处理完成数据.xlsx](image/README/1665022093583.xlsx)
+
 示例代码：
 
 ```UiBot
@@ -831,6 +833,7 @@ Next
 ```
 
 key就是当前元素的索引，从0计数。我们可以在获取到索引之后，根据自己的需要直接用，或者进一步计算，来满足业务需求。
+
 相关视频教程链接：[开发者问题解答·第7期（回放+源码）——获取数组元素的索引（23:50 - 27:00）](https://mp.weixin.qq.com/s/KEEoaYEnq5GNrCl8K-8uZA)
 
 ## 6.5. UiBot浮点数四舍五入不正确的原因及解决方案
@@ -1068,7 +1071,7 @@ Snipaste这个软件我经常用它来截图、贴图。
 比如在项目实施过程中，想要比较两个元素的特征值有什么区别，以便使用变量来替换某些特征字段，就可以用UiBot选取目标取特征值，然后Snipaste截图，贴图，把它们放在一起很方便的进行比较。
 
 * 官方下载：[https://zh.snipaste.com](https://zh.snipaste.com)
-* 教程说明：[https://docs.snipaste.com/zh-cn]([https://docs.snipaste.com/zh-cn]())
+* 教程说明：[https://docs.snipaste.com/zh-cn]([https://docs.snipaste.com/zh-cn])
 
 ![1656506336676](image/README/1656506336676.png)
 
